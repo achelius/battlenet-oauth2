@@ -14,6 +14,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.dementh.lib.battlenet_oauth2.BnConstants;
+import com.dementh.lib.battlenet_oauth2.R;
 import com.dementh.lib.battlenet_oauth2.connections.BnOAuth2Helper;
 import com.dementh.lib.battlenet_oauth2.connections.BnOAuth2Params;
 
@@ -46,7 +47,7 @@ public class BnOAuthAccessTokenActivity extends AppCompatActivity {
         webview = new WebView(this);
         webview.getSettings().setJavaScriptEnabled(true);
         webview.setVisibility(View.VISIBLE);
-        setContentView(webview);
+        setContentView(R.layout.activity_bn_oauth_access_token);
 
         final String authorizationUrl = oAuth2Helper.getAuthorizationUrl();
         Log.i(BnConstants.TAG, "Using authorizationUrl = " + authorizationUrl);
@@ -60,10 +61,9 @@ public class BnOAuthAccessTokenActivity extends AppCompatActivity {
             @Override
             public void onPageFinished(final WebView view, final String url)  {
                 Log.d(BnConstants.TAG, "onPageFinished : " + url + " handled = " + handled);
-
+                BnOAuthAccessTokenActivity.this.setContentView(webview);
                 if (url.startsWith(bnOAuth2Params.getRederictUri())) {
                     webview.setVisibility(View.INVISIBLE);
-
                     if (!handled) {
                         new ProcessToken(url).execute();
                     }
@@ -123,7 +123,7 @@ public class BnOAuthAccessTokenActivity extends AppCompatActivity {
         }
 
         private String extractCodeFromUrl(String url) throws Exception {
-            final String encodedCode = url.substring(bnOAuth2Params.getRederictUri().length() + 7, url.length());
+            final String encodedCode = url.substring(bnOAuth2Params.getRederictUri().length() + 6, url.length());
             return URLDecoder.decode(encodedCode, "UTF-8");
         }
 
